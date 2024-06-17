@@ -1,0 +1,22 @@
+version: '3.5'
+
+services:
+  express-redis:
+    container_name: express-redis
+    build: .
+    ports:
+      - "8071:3000"
+    depends_on:
+      - redis-in-express
+    environment:
+      - REDIS_HOST=redis-in-express
+      - REDIS_PORT=6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  redis-in-express:
+    container_name: redis-in-express
+    image: redis:alpine
+    ports:
+      - "6379:6379"

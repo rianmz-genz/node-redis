@@ -4,11 +4,19 @@ const redis = require("redis");
 let redisClient;
 
 (async () => {
-  redisClient = redis.createClient();
+  try {
+    // Create Redis client and connect using the Docker service name
+    redisClient = redis.createClient({
+      url: "redis://default@redis-in-express:6379"
+    });
 
-  redisClient.on("error", (error) => console.error(`Error : ${error}`));
+    redisClient.on("error", (error) => console.error(`Error : ${error}`));
 
-  await redisClient.connect();
+    await redisClient.connect();
+    console.log("Connected to Redis");
+  } catch (error) {
+    console.error(`Failed to connect to Redis: ${error.message}`);
+  }
 })();
 
 async function fetchApiData(species) {
